@@ -7,7 +7,27 @@ DISKS = 8
 Vagrant.configure("2") do |config|
     config.ssh.insert_key = false
     config.vm.box = "centos/atomic-host"
-    config.vm.synced_folder '.', '/home/vagrant/sync', disabled: true
+
+    # Override
+    config.vm.provider :libvirt do |v,override|
+        override.vm.synced_folder '.', '/home/vagrant/sync', disabled: true
+    end
+
+    # Make non-storage machine
+    config.vm.define :client do |client|
+        client.vm.network :private_network, ip: "192.168.10.90"
+        client.vm.host_name = "client"
+        client.vm.provider :virtualbox do |vb|
+            vb.memory = 1024
+            vb.cpus = 2
+        end
+
+        client.vm.provider :libvirt do |lv|
+            lv.memory = 1024
+            lv.cpus = 2
+        end
+
+    end
 
     # Make the glusterfs cluster, each with DISKS number of drives
     (0..NODES-1).each do |i|
