@@ -7,3 +7,6 @@
 
 - name: disable selinux
   selinux: state=disabled
+
+- name: fix issue with eth1
+  copy: src=rc.local owner=root group=root mode=755 dest=/etc/rc.d
