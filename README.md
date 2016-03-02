@@ -1,5 +1,5 @@
 # Aplo
-Creates a Kubernetes cluster of 4 minions, each with 500GB drives, and one master.
+Creates a Kubernetes cluster of 4 minions, each with 500GB drives, and one master on CentOS Atomic Host 7.2+.
 
 To bring up the cluster, type:
 
