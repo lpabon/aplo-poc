@@ -28,7 +28,7 @@
 
 		"sshexec" : {
             "keyfile" : "/etc/heketi/insecure_private_key",
-            "user" : "vagrant"
+            "user" : "root"
         }
 	}
 }

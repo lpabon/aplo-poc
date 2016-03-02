@@ -39,7 +39,15 @@ RUN sed -i.save -e "s#udev_sync = 1#udev_sync = 0#" \
   -e "s#udev_rules = 1#udev_rules = 0#" \
   -e "s#use_lvmetad = 1#use_lvmetad = 0#" /etc/lvm/lvm.conf
 
+# Set password
 RUN echo 'root:password' | chpasswd
+
+# Set SSH public key
+USER root
+RUN mkdir -p /home/root/.ssh 
+ADD ./authorized_keys /home/root/.ssh
+RUN chmod 600 /home/root/.ssh/authorized_keys
+
 VOLUME [ “/sys/fs/cgroup”, "/dev", "/run/lvm" ]
 
 EXPOSE 22 111 245 443 24007 2049 8080 6010 6011 6012 38465 38466 38468 38469 49152 49153 49154 49156 49157 49158 49159 49160 49161 49162
