@@ -12,7 +12,22 @@
   copy: src=flanneld-conf.json dest=/home/vagrant owner=vagrant group=vagrant
 
 - name: copy pods
-  copy: src=pods dest=/home/vagrant owner=vagrant group=vagrant directory_mode=yes
+  copy: src=pods dest=/home/vagrant owner=vagrant group=vagrant directory_mode=755 mode=644
+
+- name: get heketi client
+  command: curl -L -O https://github.com/heketi/heketi/releases/download/1.0.2/heketi-1.0.2-release-1.0.0.linux.amd64.tar.gz chdir=/home/vagrant
+
+- name: unarchive heketi client
+  unarchive: src=/home/vagrant/heketi-1.0.2-release-1.0.0.linux.amd64.tar.gz copy=no dest=/home/vagrant owner=vagrant group=vagrant
+
+- name: mv client
+  command: mv heketi/heketi-cli /home/vagrant chdir=/home/vagrant
+
+- name: change permissions
+  command: chown vagrant:vagrant heketi-cli chdir=/home/vagrant
+
+- name: remove files
+  command: rm -fr heketi-1.0.2-release-1.0.0.linux.amd64.tar.gz heketi
 
 - name: enable kube services
   service: name={{ item }} state=started enabled=yes
