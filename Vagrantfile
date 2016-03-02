@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-NODES = 4
+MINIONS = 4
 DISKS = 8
 
 Vagrant.configure("2") do |config|
@@ -13,16 +13,16 @@ Vagrant.configure("2") do |config|
         override.vm.synced_folder '.', '/home/vagrant/sync', disabled: true
     end
 
-    # Make non-storage machine
-    config.vm.define :client do |client|
-        client.vm.network :private_network, ip: "192.168.10.90"
-        client.vm.host_name = "client"
-        client.vm.provider :virtualbox do |vb|
+    # Make kub master
+    config.vm.define :master do |master|
+        master.vm.network :private_network, ip: "192.168.10.90"
+        master.vm.host_name = "master"
+        master.vm.provider :virtualbox do |vb|
             vb.memory = 1024
             vb.cpus = 2
         end
 
-        client.vm.provider :libvirt do |lv|
+        master.vm.provider :libvirt do |lv|
             lv.memory = 1024
             lv.cpus = 2
         end
@@ -30,7 +30,7 @@ Vagrant.configure("2") do |config|
     end
 
     # Make the glusterfs cluster, each with DISKS number of drives
-    (0..NODES-1).each do |i|
+    (0..MINIONS-1).each do |i|
         config.vm.define "atomic#{i}" do |atomic|
             atomic.vm.hostname = "atomic#{i}"
             atomic.vm.network :private_network, ip: "192.168.10.10#{i}"
@@ -49,19 +49,16 @@ Vagrant.configure("2") do |config|
                 end
             end
 
-            #if i == (NODES-1)
-            if false
+            if i == (MINIONS-1)
                 # View the documentation for the provider you're using for more
                 # information on available options.
                 atomic.vm.provision :ansible do |ansible|
                     ansible.limit = "all"
                     ansible.playbook = "site.yml"
                     ansible.groups = {
-                        "client" => ["client"],
-                        "heketi" => ["atomic0"],
-                        "gluster" => (0..NODES-1).map {|j| "atomic#{j}"},
+                        "master" => ["master"],
+                        "gluster" => (0..MINIONS-1).map {|j| "atomic#{j}"},
                     }
-
                 end
             end
         end

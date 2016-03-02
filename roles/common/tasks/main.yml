@@ -1,0 +1,9 @@
+- name: update atomic
+  command: atomic host upgrade
+  ignore_errors: yes
+
+- name: clean iptables
+  command: iptables -F
+
+- name: disable selinux
+  selinux: state=disabled
