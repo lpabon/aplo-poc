@@ -57,7 +57,7 @@ Vagrant.configure("2") do |config|
                     ansible.playbook = "site.yml"
                     ansible.groups = {
                         "master" => ["master"],
-                        "gluster" => (0..MINIONS-1).map {|j| "atomic#{j}"},
+                        "minions" => (0..MINIONS-1).map {|j| "atomic#{j}"},
                     }
                 end
             end
