@@ -44,9 +44,9 @@ RUN echo 'root:password' | chpasswd
 
 # Set SSH public key
 USER root
-RUN mkdir -p /home/root/.ssh 
-ADD ./authorized_keys /home/root/.ssh
-RUN chmod 600 /home/root/.ssh/authorized_keys
+RUN mkdir -p /root/.ssh
+ADD ./authorized_keys /root/.ssh/authorized_keys
+RUN chmod 600 /root/.ssh/authorized_keys
 
 VOLUME [ “/sys/fs/cgroup”, "/dev", "/run/lvm" ]
 

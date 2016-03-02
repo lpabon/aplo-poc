@@ -7,6 +7,7 @@ LABEL description="Heketi with vagrant ssh private key"
 ADD ./heketi.json /etc/heketi/heketi.json
 ADD ./insecure_private_key /etc/heketi/insecure_private_key
 USER root
+RUN chmod 600 /etc/heketi/insecure_private_key
 RUN chown heketi:heketi /etc/heketi/insecure_private_key
 
 VOLUME [ "/etc/heketi", "/var/lib/heketi" ]
