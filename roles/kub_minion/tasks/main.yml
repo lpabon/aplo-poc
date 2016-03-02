@@ -28,6 +28,9 @@
     - kubelet
     - kube-proxy
 
+- name: wait until minion has registered
+  command: sleep 10
+
 - name: remove label minion
   command: kubectl -s http://192.168.10.90:8080 label node {{ansible_eth1.ipv4.address}} name-
 
