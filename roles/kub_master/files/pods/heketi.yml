@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: heketi
+spec:
+  containers:
+    - name: heketi
+      image: heketi/heketi
+      ports:
+        - containerPort: 8080
+          hostPort: 8080

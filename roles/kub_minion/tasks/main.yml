@@ -28,8 +28,11 @@
     - kubelet
     - kube-proxy
 
+- name: sshd to listen on eth0 only
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^#ListenAddress 0.0.0.0" line="ListenAddress {{ansible_eth0.ipv4.address}}"
+
 - name: wait until minion has registered
-  command: sleep 10
+  command: sleep 5 
 
 - name: remove label minion
   command: kubectl -s http://192.168.10.90:8080 label node {{ansible_eth1.ipv4.address}} name-

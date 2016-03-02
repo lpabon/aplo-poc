@@ -9,7 +9,10 @@
     - kubelet
 
 - name: copy flanneld configuration
-  copy: src=flanneld-conf.json dest=/home/vagrant owner=vagrant group=vagrant 
+  copy: src=flanneld-conf.json dest=/home/vagrant owner=vagrant group=vagrant
+
+- name: copy pods
+  copy: src=pods dest=/home/vagrant owner=vagrant group=vagrant directory_mode=yes
 
 - name: enable kube services
   service: name={{ item }} state=started enabled=yes
