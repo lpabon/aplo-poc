@@ -27,3 +27,9 @@
     - flanneld
     - kubelet
     - kube-proxy
+
+- name: remove label minion
+  command: kubectl -s http://192.168.10.90:8080 label node {{ansible_eth1.ipv4.address}} name-
+
+- name: label minion
+  command: kubectl -s http://192.168.10.90:8080 label node {{ansible_eth1.ipv4.address}} name=worker-{{ansible_eth1.ipv4.address.split('.')[3]}}
