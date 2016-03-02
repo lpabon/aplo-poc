@@ -5,7 +5,7 @@ metadata:
 spec:
   containers:
     - name: heketi
-      image: heketi/heketi
+      image: lpabon/aplo-heketi
       ports:
         - containerPort: 8080
           hostPort: 8080
