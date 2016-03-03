@@ -1,27 +1,27 @@
-# Aplo
-Creates a Kubernetes cluster of 4 minions, each with 500GB drives, and one master on CentOS Atomic Host 7.2+.
+# GlusterFS + Kubernetes + Atomic + Heketi
+GlusterFS containers deployed on CentOS Atomic hosts by Kubernetes with volumes allocated by Heketi. Creates a Kubernetes cluster of 4 minions, each with 500GB drives, and one master.
 
-To bring up the cluster, type:
+# Running the demo
 
 ```
 $ sudo vagrant up --no-provision
 $ sudo vagrant provision
+$ sudo vagrant halt
+<< Edit Vagrantfile and uncomment atomic.ssh.port = 8022 >>
+$ sudo vagrant up
 $ sudo vagrant ssh master
 
-$ vi kube-nginx.yml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: www
-spec:
-  containers:
-    - name: nginx
-      image: nginx
-      ports:
-        - containerPort: 80
-          hostPort: 8080
+[vagrant@master ~]$ kubectl get nodes
+[vagrant@master ~]$ kubectl create -f pods/gluster
 
-$ kubectl create -f kube-nginx.yml
-$ kubectl get pod -o wide
-$ curl http://<node ip>:8080
+[vagrant@master ~]$ kubectl get pods -o wide
+<< wait until all pods are ready >>
+
+[vagrant@master ~]$ export HEKETI_CLI_SERVER=http://192.168.10.103:8080
+[vagrant@master ~]$ ./heketi-cli load -json=pods/topology_libvirt.json
+[vagrant@master ~]$ ./heketi-cli volume create -size=200 | head
+
 ```
+
+# Screencast
+[![demo](https://i.vimeocdn.com/video/558837296_640.jpg)](https://vimeo.com/157537278)
