@@ -34,6 +34,9 @@ Vagrant.configure("2") do |config|
         config.vm.define "atomic#{i}" do |atomic|
             atomic.vm.hostname = "atomic#{i}"
             atomic.vm.network :private_network, ip: "192.168.10.10#{i}"
+            #
+            # atomic.ssh.port = 8022
+            #
             (0..DISKS-1).each do |d|
                 atomic.vm.provider :virtualbox do |vb|
                     vb.customize [ "createhd", "--filename", "disk-#{i}-#{d}.vdi", "--size", 500*1024 ]

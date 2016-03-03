@@ -23,6 +23,7 @@ RUN yum --setopt=tsflags=nodocs -q -y install \
   attr \
   iputils \
   iproute \
+  sudo \
   centos-release-gluster \
   epel-release
 
