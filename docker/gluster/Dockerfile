@@ -24,6 +24,7 @@ RUN yum --setopt=tsflags=nodocs -q -y install \
   iputils \
   iproute \
   sudo \
+  xfsprogs \
   centos-release-gluster \
   epel-release
 
@@ -48,6 +49,9 @@ USER root
 RUN mkdir -p /root/.ssh
 ADD ./authorized_keys /root/.ssh/authorized_keys
 RUN chmod 600 /root/.ssh/authorized_keys
+
+# Allow commands over ssh
+RUN sed -i.save -e "s#Defaults requiretty##" /etc/sudoers
 
 VOLUME [ “/sys/fs/cgroup”, "/dev", "/run/lvm" ]
 
