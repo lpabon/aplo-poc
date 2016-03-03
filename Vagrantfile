@@ -35,7 +35,7 @@ Vagrant.configure("2") do |config|
             atomic.vm.hostname = "atomic#{i}"
             atomic.vm.network :private_network, ip: "192.168.10.10#{i}"
             #
-            # atomic.ssh.port = 8022
+            atomic.ssh.port = 8022
             #
             (0..DISKS-1).each do |d|
                 atomic.vm.provider :virtualbox do |vb|
