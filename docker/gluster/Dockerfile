@@ -51,7 +51,8 @@ ADD ./authorized_keys /root/.ssh/authorized_keys
 RUN chmod 600 /root/.ssh/authorized_keys
 
 # Allow commands over ssh
-RUN sed -i.save -e "s#^.*requiretty##" /etc/sudoers
+ADD ./sudoers /etc/sudoers
+RUN chmod 440 /etc/sudoers
 
 VOLUME [ “/sys/fs/cgroup”, "/dev", "/run/lvm" ]
 
