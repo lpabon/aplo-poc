@@ -3,6 +3,8 @@ kind: Pod
 metadata:
   name: heketi
 spec:
+  nodeSelector:
+    name: worker-103
   containers:
     - name: heketi
       image: lpabon/aplo-heketi
