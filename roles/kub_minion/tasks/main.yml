@@ -14,6 +14,16 @@
     owner: root
     group: root
     mode: 0644
+  when: provider == "libvirt"
+
+- name: setup kubelet
+  template:
+    src: kubelet.vb.j2
+    dest: /etc/kubernetes/kubelet
+    owner: root
+    group: root
+    mode: 0644
+  when: provider == "virtualbox"
 
 - name: set master location
   copy: src=config owner=root group=root dest=/etc/kubernetes/config
@@ -36,6 +46,16 @@
 
 - name: remove label minion
   command: kubectl -s http://192.168.10.90:8080 label node {{ansible_eth1.ipv4.address}} name-
+  when: provider == "libvirt"
 
 - name: label minion
   command: kubectl -s http://192.168.10.90:8080 label node {{ansible_eth1.ipv4.address}} name=worker-{{ansible_eth1.ipv4.address.split('.')[3]}}
+  when: provider == "libvirt"
+
+- name: remove label minion
+  command: kubectl -s http://192.168.10.90:8080 label node {{ansible_enp0s8.ipv4.address}} name-
+  when: provider == "virtualbox"
+
+- name: label minion
+  command: kubectl -s http://192.168.10.90:8080 label node {{ansible_enp0s8.ipv4.address}} name=worker-{{ansible_enp0s8.ipv4.address.split('.')[3]}}
+  when: provider == "virtualbox"
