@@ -12,6 +12,9 @@ Vagrant.configure("2") do |config|
     config.vm.provider :libvirt do |v,override|
         override.vm.synced_folder '.', '/home/vagrant/sync', disabled: true
     end
+    config.vm.provider :virtualbox do |v,override|
+        override.vm.synced_folder '.', '/home/vagrant/sync', disabled: true
+    end
 
     # Make kub master
     config.vm.define :master do |master|
@@ -37,10 +40,16 @@ Vagrant.configure("2") do |config|
             #
             # atomic.ssh.port = 8022
             #
+            atomic.vm.provider :virtualbox do |vb|
+                vb.customize ["storagectl", :id,"--name", "SATAController", "--add", "sata"]
+            end
+
             (0..DISKS-1).each do |d|
                 atomic.vm.provider :virtualbox do |vb|
-                    vb.customize [ "createhd", "--filename", "disk-#{i}-#{d}.vdi", "--size", 500*1024 ]
-                    vb.customize [ "storageattach", :id, "--storagectl", "SATA Controller", "--port", 3+d, "--device", 0, "--type", "hdd", "--medium", "disk-#{i}-#{d}.vdi" ]
+                    unless File.exist?("disk-#{i}-#{d}.vdi")
+                        vb.customize [ "createmedium", "--filename", "disk-#{i}-#{d}.vdi", "--size", 500*1024 ]
+                    end
+                    vb.customize [ "storageattach", :id, "--storagectl", "SATAController", "--port", 3+d, "--device", 0, "--type", "hdd", "--medium", "disk-#{i}-#{d}.vdi" ]
                     vb.memory = 1024
                     vb.cpus = 2
                 end
@@ -62,6 +71,12 @@ Vagrant.configure("2") do |config|
                         "master" => ["master"],
                         "minions" => (0..MINIONS-1).map {|j| "atomic#{j}"},
                     }
+                    atomic.vm.provider :libvirt do  |lv|
+                        ansible.extra_vars = {provider: "libvirt"}
+                    end
+                    atomic.vm.provider :virtualbox do |vb|
+                        ansible.extra_vars = {provider: "virtualbox"}
+                    end
                 end
             end
         end
