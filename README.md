@@ -43,7 +43,7 @@ $ sudo vagrant ssh master
 << wait until all pods are ready >>
 
 [vagrant@master ~]$ export HEKETI_CLI_SERVER=http://192.168.10.103:8080
-[vagrant@master ~]$ ./heketi-cli load -json=pods/topology_libvirt.json
+[vagrant@master ~]$ ./heketi-cli load -json=pods/topology_virtualbox.json
 [vagrant@master ~]$ ./heketi-cli volume create -size=200 | head
 
 ```
