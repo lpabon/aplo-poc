@@ -28,14 +28,14 @@ $ sudo vagrant ssh master
 ## VirtualBox 
 
 ```
-$ sudo vagrant up
-$ sudo vagrant halt
+$ vagrant up
+$ vagrant halt
 ```
 
 Now start the VMs again from the VirtualBox UI, not by using `vagrant up`.
 
 ```
-$ sudo vagrant ssh master
+$ vagrant ssh master
 [vagrant@master ~]$ kubectl get nodes
 [vagrant@master ~]$ kubectl create -f pods/gluster
 
