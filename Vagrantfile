@@ -65,18 +65,22 @@ Vagrant.configure("2") do |config|
                 # View the documentation for the provider you're using for more
                 # information on available options.
                 atomic.vm.provision :ansible do |ansible|
+
+                    if ARGV[1] and \
+                       (ARGV[1].split('=')[0] == "--provider" or ARGV[2])
+                      provider = (ARGV[1].split('=')[1] || ARGV[2])
+                    else
+                      provider = (ENV['VAGRANT_DEFAULT_PROVIDER'] || :virtualbox).to_sym
+                    end
+                    puts "Detected #{provider}"
+
+                    ansible.extra_vars = {provider: "#{provider}"}
                     ansible.limit = "all"
                     ansible.playbook = "site.yml"
                     ansible.groups = {
                         "master" => ["master"],
                         "minions" => (0..MINIONS-1).map {|j| "atomic#{j}"},
                     }
-                    atomic.vm.provider :libvirt do  |lv|
-                        ansible.extra_vars = {provider: "libvirt"}
-                    end
-                    atomic.vm.provider :virtualbox do |vb|
-                        ansible.extra_vars = {provider: "virtualbox"}
-                    end
                 end
             end
         end
