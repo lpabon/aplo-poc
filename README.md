@@ -5,8 +5,6 @@ GlusterFS containers deployed on CentOS Atomic hosts by Kubernetes with volumes 
 
 ## Libvirt
 
->NOTE: Do not use kernel-4.4.3-300. Please use an earlier version until https://bugzilla.redhat.com/show_bug.cgi?id=1315492 is fixed.
-
 ```
 $ sudo vagrant up --no-provision
 $ sudo vagrant provision
