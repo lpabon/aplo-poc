@@ -11,6 +11,9 @@
 - name: copy flanneld configuration
   copy: src=flanneld-conf.json dest=/home/vagrant owner=vagrant group=vagrant
 
+- name: copy setup_gluster
+  copy: src=setup_gluster.sh dest=/home/vagrant owner=vagrant group=vagrant mode=755
+
 - name: copy pods
   copy: src=pods dest=/home/vagrant owner=vagrant group=vagrant directory_mode=755 mode=644
 
