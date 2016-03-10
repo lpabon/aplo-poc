@@ -6,4 +6,7 @@ sleep 5
 kubectl exec gluster-1 -- gluster volume create glustervol replica 3 192.168.10.100:/srv/brick/brick1 192.168.10.101:/srv/brick/brick1 192.168.10.102:/srv/brick/brick1
 sleep 1
 kubectl exec gluster-1 -- gluster volume start glustervol
+sleep 1
+echo Now mount in worker-103 
+echo then setup ams
 
