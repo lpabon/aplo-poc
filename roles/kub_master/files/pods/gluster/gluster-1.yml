@@ -18,20 +18,15 @@ spec:
         capabilities: {}
         privileged: true
       volumeMounts:
-        - name: lvm
-          mountPath: /run/lvm
-        - name: dev
-          mountPath: /dev
+        - name: brick
+          mountPath: /srv/brick
         - name: cgroups
           mountPath: /sys/fs/cgroup
           readOnly: true
   volumes:
-    - name: lvm
+    - name: brick
       hostPath:
-        path: "/run/lvm"
-    - name: dev
-      hostPath:
-        path: "/dev"
+        path: "/srv/brick"
     - name: cgroups
       hostPath:
         path: "/sys/fs/cgroup"
