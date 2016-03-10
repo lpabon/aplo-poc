@@ -59,3 +59,22 @@
 - name: label minion
   command: kubectl -s http://192.168.10.90:8080 label node {{ansible_enp0s8.ipv4.address}} name=worker-{{ansible_enp0s8.ipv4.address.split('.')[3]}}
   when: provider == "virtualbox"
+
+- name: create vg
+  lvg: vg=gvg pvs=/dev/vdb,/dev/vdc,/dev/vdd,/dev/vde,/dev/vdf,/dev/vdg,/dev/vdh,/dev/vdi 
+
+- name: creat LV
+  lvol: lv=glv vg=gvg size=100%FREE
+
+- name: format LV
+  filesystem: fstype=xfs dev=/dev/gvg/glv
+
+- name: path for mount
+  file: path=/srv/brick state=directory mode=0755
+
+- name: mount LV
+  mount: name=/srv/brick src=/dev/gvg/glv fstype=xfs state=mounted opts=noatime,inode64,nodiratime
+
+- name: path for brick
+  file: path=/srv/brick/brick1 state=directory mode=0755
+
