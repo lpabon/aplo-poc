@@ -47,6 +47,7 @@
 - name: remove label minion
   command: kubectl -s http://192.168.10.90:8080 label node {{ansible_eth1.ipv4.address}} name-
   when: provider == "libvirt"
+  ignore_errors: yes
 
 - name: label minion
   command: kubectl -s http://192.168.10.90:8080 label node {{ansible_eth1.ipv4.address}} name=worker-{{ansible_eth1.ipv4.address.split('.')[3]}}
@@ -55,6 +56,7 @@
 - name: remove label minion
   command: kubectl -s http://192.168.10.90:8080 label node {{ansible_enp0s8.ipv4.address}} name-
   when: provider == "virtualbox"
+  ignore_errors: yes
 
 - name: label minion
   command: kubectl -s http://192.168.10.90:8080 label node {{ansible_enp0s8.ipv4.address}} name=worker-{{ansible_enp0s8.ipv4.address.split('.')[3]}}

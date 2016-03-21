@@ -15,3 +15,6 @@
 - name: fix issue with enp0s8
   copy: src=rc.local.vb owner=root group=root mode=755 dest=/etc/rc.d/rc.local
   when: provider == "virtualbox"
+
+- name: configure dm_snapshot module
+  copy: src=dm_snapshot.conf owner=root group=root mode=644 dest=/etc/modules-load.d
