@@ -1,7 +1,7 @@
 FROM centos
 
 MAINTAINER Humble Chirammal hchiramm@redhat.com
-LABEL version="0.2"
+LABEL version="0.3"
 LABEL description="GlusterFS container based on CentOS 7"
 
 ENV container docker
@@ -56,11 +56,11 @@ RUN chmod 440 /etc/sudoers
 
 VOLUME [ “/sys/fs/cgroup”, "/dev", "/run/lvm" ]
 
-EXPOSE 22 111 245 443 24007 2049 8080 6010 6011 6012 38465 38466 38468 38469 49152 49153 49154 49156 49157 49158 49159 49160 49161 49162
+EXPOSE 111 245 443 24007 2049 8080 6010 6011 6012 38465 38466 38468 38469 49152 49153 49154 49156 49157 49158 49159 49160 49161 49162
 
 RUN systemctl disable nfs-server.service
+RUN systemctl disable sshd.service
 RUN systemctl enable rpcbind.service
 RUN systemctl enable glusterd.service
-RUN systemctl enable sshd.service
 
 CMD ["/usr/sbin/init"]
