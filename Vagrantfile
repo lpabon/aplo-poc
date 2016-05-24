@@ -55,34 +55,12 @@ Vagrant.configure("2") do |config|
                 end
                 driverletters = ('b'..'z').to_a
                 atomic.vm.provider :libvirt do  |lv|
-                    lv.storage :file, :device => "vd#{driverletters[d]}", :path => "disk-#{i}-#{d}.disk", :size => '500G'
+                    lv.storage :file, :device => "vd#{driverletters[d]}", :path => "disk-#{i}-#{d}.disk", :size => '1024G'
                     lv.memory = 1024
                     lv.cpus =2
                 end
             end
 
-            if i == (MINIONS-1)
-                # View the documentation for the provider you're using for more
-                # information on available options.
-                atomic.vm.provision :ansible do |ansible|
-
-                    if ARGV[1] and \
-                       (ARGV[1].split('=')[0] == "--provider" or ARGV[2])
-                      provider = (ARGV[1].split('=')[1] || ARGV[2])
-                    else
-                      provider = (ENV['VAGRANT_DEFAULT_PROVIDER'] || :virtualbox).to_sym
-                    end
-                    puts "Detected #{provider}"
-
-                    ansible.extra_vars = {provider: "#{provider}"}
-                    ansible.limit = "all"
-                    ansible.playbook = "site.yml"
-                    ansible.groups = {
-                        "master" => ["master"],
-                        "minions" => (0..MINIONS-1).map {|j| "atomic#{j}"},
-                    }
-                end
-            end
         end
     end
 end
