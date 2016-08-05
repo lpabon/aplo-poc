@@ -37,11 +37,12 @@ Vagrant.configure("2") do |config|
         config.vm.define "atomic#{i}" do |atomic|
             atomic.vm.hostname = "atomic#{i}"
             atomic.vm.network :private_network, ip: "192.168.10.10#{i}"
-            #
-            atomic.ssh.port = 8022
-            #
+
+            # Settings for Virtualbox
             atomic.vm.provider :virtualbox do |vb|
-                vb.customize ["storagectl", :id,"--name", "SATAController", "--add", "sata"]
+                unless File.exist?("disk-#{i}-0.vdi")
+                    vb.customize ["storagectl", :id,"--name", "SATA", "--add", "sata"]
+                end
             end
 
             (0..DISKS-1).each do |d|
@@ -49,7 +50,7 @@ Vagrant.configure("2") do |config|
                     unless File.exist?("disk-#{i}-#{d}.vdi")
                         vb.customize [ "createmedium", "--filename", "disk-#{i}-#{d}.vdi", "--size", 500*1024 ]
                     end
-                    vb.customize [ "storageattach", :id, "--storagectl", "SATAController", "--port", 3+d, "--device", 0, "--type", "hdd", "--medium", "disk-#{i}-#{d}.vdi" ]
+                    vb.customize [ "storageattach", :id, "--storagectl", "SATA", "--port", 3+d, "--device", 0, "--type", "hdd", "--medium", "disk-#{i}-#{d}.vdi" ]
                     vb.memory = 1024
                     vb.cpus = 2
                 end
