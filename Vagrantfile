@@ -50,18 +50,45 @@ Vagrant.configure("2") do |config|
                     unless File.exist?("disk-#{i}-#{d}.vdi")
                         vb.customize [ "createmedium", "--filename", "disk-#{i}-#{d}.vdi", "--size", 500*1024 ]
                     end
-                    vb.customize [ "storageattach", :id, "--storagectl", "SATA", "--port", 3+d, "--device", 0, "--type", "hdd", "--medium", "disk-#{i}-#{d}.vdi" ]
+                    vb.customize [ "storageattach", :id, "--storagectl", "SATA", "--port", 3+d, "--device", 0, "--type", "hdd", "--medium", "kube-disk-#{i}-#{d}.vdi" ]
                     vb.memory = 1024
                     vb.cpus = 2
                 end
                 driverletters = ('b'..'z').to_a
                 atomic.vm.provider :libvirt do  |lv|
-                    lv.storage :file, :device => "vd#{driverletters[d]}", :path => "disk-#{i}-#{d}.disk", :size => '1024G'
+                    lv.storage :file, :device => "vd#{driverletters[d]}", :path => "kube-disk-#{i}-#{d}.disk", :size => '1024G'
                     lv.memory = 1024
                     lv.cpus =2
                 end
             end
 
+
+			if ARGV[1] and \
+				(ARGV[1].split('=')[0] == "--provider" or ARGV[2])
+				provider = (ARGV[1].split('=')[1] || ARGV[2])
+		    else
+				provider = (ENV['VAGRANT_DEFAULT_PROVIDER'] || :virtualbox).to_sym
+		    end
+
+            if i == (MINIONS-1)
+                # View the documentation for the provider you're using for more
+                # information on available options.
+                atomic.vm.provision :ansible do |ansible|
+                    ansible.limit = "all"
+                    ansible.playbook = "site.yml"
+                    ansible.groups = {
+                        "master" => ["master"],
+                        "minions" => (0..MINIONS-1).map {|j| "atomic#{j}"},
+                    }
+                    ansible.extra_vars = { "provider" => provider }
+                    #atomic.vm.provider :libvirt do  |_, override|
+                    #    ansible.extra_vars = {"provider": "libvirt"}
+                    #end
+                    #atomic.vm.provider :virtualbox do |_, override|
+                    #    ansible.extra_vars = {"provider": "virtualbox"}
+                    #end
+                end
+			end
         end
     end
 end

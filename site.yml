@@ -1,14 +1,23 @@
 - hosts: all
-  sudo: True
+  become: yes
+  become_method: sudo
   roles:
     - common
 
 - hosts: master
-  sudo: True
+  become: yes
+  become_method: sudo
   roles:
     - kub_master
 
 - hosts: minions
-  sudo: True
+  become: yes
+  become_method: sudo
   roles:
     - kub_minion
+
+- hosts: all
+  become: yes
+  become_method: sudo
+  roles:
+    - upgrade

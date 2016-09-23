@@ -1,0 +1,7 @@
+- name: upgrade
+  command: atomic host upgrade
+
+- name: reboot
+  shell: sleep 2 && systemctl reboot
+  ignore_errors: true
+  async: 1
